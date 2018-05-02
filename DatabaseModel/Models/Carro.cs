@@ -12,10 +12,12 @@ namespace DatabaseModel.Models
         public string Marca { get; set; }
 
         public ICollection<CarroAcessorioNN> CarroAcessorioNN { get; set; }
+        public ICollection<PessoaCarroNN> PessoaCarroNN { get; set; }
 
         public Carro()
         {
             CarroAcessorioNN = new Collection<CarroAcessorioNN>();
+            PessoaCarroNN = new Collection<PessoaCarroNN>();
         }
     }
 }

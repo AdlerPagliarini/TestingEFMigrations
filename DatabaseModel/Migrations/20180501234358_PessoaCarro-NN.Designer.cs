@@ -11,9 +11,10 @@ using System;
 namespace DatabaseModel.Migrations
 {
     [DbContext(typeof(DataMyContext))]
-    partial class DataMyContextModelSnapshot : ModelSnapshot
+    [Migration("20180501234358_PessoaCarro-NN")]
+    partial class PessoaCarroNN
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

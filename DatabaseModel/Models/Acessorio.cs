@@ -11,11 +11,13 @@ namespace DatabaseModel.Models
         public int Id { get; set; }
         public string Tipo { get; set; }
 
+        /*É possível mas não faz sentido para este contexto de leitura de dados
         public ICollection<CarroAcessorioNN> CarroAcessorioNN { get; set; }
 
         public Acessorio()
         {
             CarroAcessorioNN = new Collection<CarroAcessorioNN>();
         }
+        */
     }
 }

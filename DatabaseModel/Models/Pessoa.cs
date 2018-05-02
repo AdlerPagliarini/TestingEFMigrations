@@ -12,10 +12,12 @@ namespace DatabaseModel.Models
         public string Nome { get; set; }
 
         public virtual ICollection<Endereco> Enderecos { get; set; }
+        public virtual ICollection<PessoaCarroNN> PessoaCarroNN { get; set; }
 
         public Pessoa()
         {
             Enderecos = new Collection<Endereco>();
+            PessoaCarroNN = new Collection<PessoaCarroNN>();
         }
     }
 }

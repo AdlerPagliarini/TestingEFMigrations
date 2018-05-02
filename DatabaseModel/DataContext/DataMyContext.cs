@@ -17,6 +17,7 @@ namespace DatabaseModel.DataContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CarroAcessorioNN>().HasKey(t => new { t.CarroId, t.AcessorioId });
+            modelBuilder.Entity<PessoaCarroNN>().HasKey(t => new { t.PessoaId, t.CarroId });
         }
 
         public DbSet<Pessoa> Pessoa { get; set; }
