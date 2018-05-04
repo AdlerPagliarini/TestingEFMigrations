@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace DatabaseModel.Models
 {
-    public class Acessorio
+    public class Accessory
     {
         public int Id { get; set; }
-        public string Tipo { get; set; }
+        public string Type { get; set; }
 
         /*É possível mas não faz sentido para este contexto de leitura de dados
-        public ICollection<CarroAcessorioNN> CarroAcessorioNN { get; set; }
+        public ICollection<CarAccessoryNN> CarAccessoryNN { get; set; }
 
-        public Acessorio()
+        public Accessory()
         {
-            CarroAcessorioNN = new Collection<CarroAcessorioNN>();
+            CarAccessoryNN = new Collection<CarAccessoryNN>();
         }
         */
     }

@@ -27,6 +27,8 @@
     <Compile Remove="Migrations\20180324030530_PessoaEndereco_Carro_N_N_Acessorio.Designer.cs" />
     <Compile Remove="Migrations\20180324031528_PessoaEndereco_Carro_N_N_Acessorio2.cs" />
     <Compile Remove="Migrations\20180324031528_PessoaEndereco_Carro_N_N_Acessorio2.Designer.cs" />
+    <Compile Remove="Migrations\20180504024909_Endereco-Number.cs" />
+    <Compile Remove="Migrations\20180504024909_Endereco-Number.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

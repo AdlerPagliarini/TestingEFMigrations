@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DatabaseModel.DataContext;
 using DatabaseModel.Models;
+using DatabaseModel.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,58 +14,84 @@ namespace DatabaseModel.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        public class RetornoVM
+        public class ReturnM
         {
-            public IEnumerable<Pessoa> Pessoas { get; set; }
-            public IEnumerable<Pessoa> PessoasIquery { get; set; }
-            public IEnumerable<Pessoa> PessoasIqueryInclude { get; set; }
+            public IEnumerable<Person> Person { get; set; }
+            public IEnumerable<Person> PersonIquery { get; set; }
+            public IEnumerable<Person> PersonIqueryInclude { get; set; }
         }
 
-        private readonly DataMyContext _context;
-        private RetornoVM retornoVM;
+        private readonly DatabaseContext _context;
+        private ReturnM retornoVM;
 
-        public ValuesController(DataMyContext context)
+        public ValuesController(DatabaseContext context)
         {
-            this._context = context;
-            this.retornoVM = new RetornoVM();
+            this._context = context;            
+            this.retornoVM = new ReturnM();
         }
         // GET api/values
         [HttpGet]
-        public async Task<RetornoVM> Get()
+        public async Task<ReturnM> Get()
         {
             //Testando IQueryable
-            var pessoaIQInclude = await (from p in _context.Pessoa
-                                   join e in _context.Endereco
-                                     on p.Id equals e.PessoaId
-                                   select new Pessoa
+            var personIQInclude = await (from p in _context.Person
+                                   join e in _context.Address
+                                     on p.Id equals e.PersonId
+                                   select new Person
                                    {
                                        Id = p.Id,
-                                       Nome = p.Nome,
-                                       Enderecos = new Collection<Endereco> { new Endereco { Id = e.Id, NomeRua = e.NomeRua } }
+                                       Name = p.Name,
+                                       Addresses = new Collection<Address> { new Address { Id = e.Id, Street = e.Street } }
                                    }).ToListAsync();
 
-            retornoVM.PessoasIqueryInclude = pessoaIQInclude;
+            retornoVM.PersonIqueryInclude = personIQInclude;
 
             //Testando IQueryable com Include
-            IQueryable<Pessoa> pessoaIQ = from p in _context.Pessoa
-                                          .Include(p => p.Enderecos)
-                                          .Include(p => p.PessoaCarroNN)
-                                          .ThenInclude(p => p.Carro)
+            IQueryable<Person> personIQ = from p in _context.Person
+                                          .Include(p => p.Addresses)
+                                          .Include(p => p.PersonCarNN)
+                                            .ThenInclude(p => p.Car)
                                           select p;
 
-            retornoVM.PessoasIquery = pessoaIQ;
+            retornoVM.PersonIquery = personIQ;
 
             //Carregando todos os dados relacionados
-            List<Pessoa> pessoas = await _context.Pessoa
-                .Include(p => p.Enderecos)
-                .Include(p => p.PessoaCarroNN)
-                    .ThenInclude(p => p.Carro)
-                        .ThenInclude(c => c.CarroAcessorioNN)
-                            .ThenInclude(c => c.Acessorio)
-                .OrderBy(p => p.Nome)
+            List<Person> people = await _context.Person
+                .Include(p => p.Addresses)
+                .Include(p => p.PersonCarNN)
+                    .ThenInclude(p => p.Car)
+                        .ThenInclude(c => c.CarAccessoryNN)
+                            .ThenInclude(c => c.Accessory)
+                .OrderBy(p => p.Name)
                 .ToListAsync();
 
-            retornoVM.Pessoas = pessoas;
+            retornoVM.Person = people;
+
+            //Testing UnitOfWork
+            using (var unitOfWork = new UnitOfWork(_context))
+            {
+                // Example1
+                var person = unitOfWork.Person.Get(1);
+
+                // Example2
+                var Address = unitOfWork.Address.GetAddressWithPerson(1, 4);
+
+                // Example3
+                var testing = unitOfWork.Person.GetPersonWithAddress(1);
+                testing = unitOfWork.Person.GetLastPersonWithAddress();
+                unitOfWork.Address.RemoveRange(testing.Addresses);
+                unitOfWork.Person.Remove(testing);
+                unitOfWork.Complete(); //database update
+
+                var p = new Person { Name = testing.Name };
+                foreach (var e in testing.Addresses)
+                {
+                    p.Addresses.Add(new Address { PersonId = testing.Id, Street = e.Street, Number = e.Number });
+                }
+                unitOfWork.Person.Add(p);
+                unitOfWork.Address.AddRange(p.Addresses);
+                unitOfWork.Complete(); //database update
+            }
 
             return retornoVM;
         }

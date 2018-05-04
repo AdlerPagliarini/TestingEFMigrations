@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 
 namespace DatabaseModel.Models
 {
-    public class Endereco
+    public class Address
     {
         public int Id { get; set; }
-        public string NomeRua { get; set; }
+        public string Street { get; set; }
+        public int Number { get; set; }
 
         //Para facilitar navegação
-        public Pessoa Pessoa { get; set; }
-        public int PessoaId { get; set; }
+        public virtual Person Person { get; set; }
+        public int PersonId { get; set; }
     }
 }

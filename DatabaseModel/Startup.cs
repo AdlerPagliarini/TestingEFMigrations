@@ -29,7 +29,7 @@ namespace DatabaseModel
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
-            services.AddDbContext<DataMyContext>(options =>
+            services.AddDbContext<DatabaseContext>(options =>
                                  options.UseSqlServer(Configuration.GetConnectionString("Default")));
         }
 
